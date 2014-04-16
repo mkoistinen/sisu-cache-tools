@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 from cache_tools import __version__
 
 
@@ -28,7 +28,7 @@ setup(
     author='Martin Koistinen',
     author_email='mkoistinen@gmail.com',
     url='https://github.com/mkoistinen/sisu-cache-tools',
-    packages=['cache_tools', ],
+    packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
     license='LICENSE.txt',
     platforms=['OS Independent'],
