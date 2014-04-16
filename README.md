@@ -15,14 +15,17 @@ To get the automated cache-invalidation, add 'taints_cache = True' as a class-at
 
 The cache can also be cleared with::
 
-> python manage.py clearcache
-
+```` shell
+python manage.py clearcache
+````
 
 Pre-emptive Caching
 -------------------
 
 When the operator is done with all of their changes, the might consider using::
 
-> python manage.py precache
+```` shell
+python manage.py precache
+````
 
 to make HTTP requests to every page found in the sitemaps defined in the ROOT_URLCONF. This will essentially preemptively load the pages into the cache so your visitors will get speedy access, even if they're the first one to 'hit' a given page.
