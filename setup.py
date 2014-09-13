@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#
+# NOTE: To update PyPI, tag the current release:
+#
+# First increment cache_tools/__init__.py
+# Then:
+# > git tag 0.0.2 -m "Version bump for PyPI"
+# > git push --tags origin master
+# Then:
+# > python setup.py sdist upload
+#
+
 from setuptools import setup, find_packages
 from cache_tools import __version__
 
