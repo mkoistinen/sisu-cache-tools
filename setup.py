@@ -6,7 +6,7 @@
 #
 # First increment cache_tools/__init__.py
 # Then:
-# > git tag 0.0.2 -m "Version bump for PyPI"
+# > git tag x.y.z -m "Version bump for PyPI"
 # > git push --tags origin master
 # Then:
 # > python setup.py sdist upload
