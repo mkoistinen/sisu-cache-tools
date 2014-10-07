@@ -17,6 +17,7 @@ from cache_tools import __version__
 
 
 INSTALL_REQUIRES = [
+    'requests>=2.4.3',
 ]
 
 CLASSIFIERS = [

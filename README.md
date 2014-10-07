@@ -33,6 +33,61 @@ The cache can also be cleared with:
 python manage.py clearcache
 ````
 
+## Automated Varnish Cache Invalidation (via BAN)
+
+**New from version 0.1.0**
+
+Assuming there are one or more Varnish cache servers with a VCL that includes something like:
+
+```` vcl
+acl purge {
+    "zhora.nyc2.sisucloud.net";
+    "zhora.sisuconsulting.com";
+}
+
+sub vcl_recv {
+
+	...
+
+    if (req.request == "DELETE" && req.http.X-Ban-Host) {
+        if ( !client.ip ~purge ) {
+            error 405 "Not allowed";
+        }
+        ban("obj.http.x-host ~ " + req.http.X-Ban-Host);
+        error 200 "Banned";
+    }
+
+	...
+}
+````
+
+and you have configured a list of these servers in settings.CACHE_SERVERS:
+
+```` python
+CACHE_SERVERS = [
+	10.0.0.1,
+	10.0.0.2,
+]
+````
+
+and you have django.contrib.sites in use in your settings:
+
+```` python
+INSTALLED_APPS = (
+    ....
+    'django.contrib.sites',
+    ....
+)
+
+...
+
+SITE_ID = 1
+````
+
+Sisu Cache Tools will then send a DELETE request with the header X-Ban-Host to your Varnish cache servers so that even your remote caches are "cleared" too.
+
+
+
 ## Pre-emptive Caching
 
 When the operator is done with all of their changes, the might consider using:

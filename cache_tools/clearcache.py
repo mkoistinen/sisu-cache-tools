@@ -1,11 +1,35 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.sites.models import Site
+from django.conf import settings
 from django.contrib.sitemaps import ping_google
 from django.core.cache import cache
-from django.db.models.signals import post_save, m2m_changed
 from django.core.signals import request_started
+from django.db.models.signals import post_save, m2m_changed
 
 from cms.models import CMSPlugin
+
+import requests
+
+#
+# This sets up the domain that will be BANned from the Varnish caches.
+#
+if hasattr(settings, 'SITE_ID'):
+    DOMAIN = Site.objects.get_current()
+
+    #
+    # The HOST_URL isn't really used for the BANning process, but it does need
+    # to be something that will be accepted by Varnish, otherwise Varnish will
+    # let Nginx handle the request.
+    #
+    HOST_URL = 'http://{0}/'.format(DOMAIN)
+
+#
+# It is the proxy setting that determines WHERE the BAN will be sent. So,
+# we'll loop through the list of configured settings.CACHE_SERVERS and, one-
+# by-one, send the BAN request (a DELETE verb, really, since Requests can't
+# seem to handle a custom HTTP verb).
+#
 
 #
 # This is a general purpose handler for managing our cache-clearing In order
@@ -36,6 +60,18 @@ class CacheClearer:
     def clear(cls):
         if cls.rebuilt:
             cache.clear()
+
+            if hasattr(settings, 'SITE_ID') and hasattr(settings, 'CACHE_SERVERS'):
+                for proxy in settings.CACHE_SERVERS:
+                    req = requests.delete(HOST_URL, headers={
+                        'X-Ban-Host': DOMAIN,
+                    }, proxies={ 'http': proxy })
+                    if not req.status_code == 200:
+                        print('BAN request to cache server: {0} returned a status code of {1}'.format(
+                            proxy,
+                            req.status_code
+                        ))
+
             cls.rebuilt = False
 
     @classmethod
