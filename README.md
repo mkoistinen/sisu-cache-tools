@@ -41,9 +41,9 @@ Assuming there are one or more Varnish cache servers with a VCL that includes so
 
 ```` vcl
 acl purge {
-    "cache1.your_domain.xyz",
-    "cache2.your_domain.xyz",
-    "cache3.your_domain.xyz",
+    "appserver1.your_domain.xyz",
+    "appserver2.your_domain.xyz",
+    "appserver3.your_domain.xyz",
 }
 
 sub vcl_recv {
