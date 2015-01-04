@@ -14,7 +14,7 @@ memcached.
 pip install sisu-cache-tools
 ````
 
-Then, add `sisu-cache-tools` to your project's INSTALLED_APPS in settings.
+Then, add `cache_tools` to your project's INSTALLED_APPS in settings.
 Sisu Cache Tools does not use an database models, so no migration is
 necessary, but it must be added to INSTALLED_APPS, or the management commands
 will not be found and the signal handlers will not "see" any signals.
