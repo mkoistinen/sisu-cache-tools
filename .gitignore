@@ -1,4 +1,4 @@
 .DS_Store
 *.pyc
-dist
-sisu_cache_tools.egg-info
+dist/
+sisu_cache_tools.egg-info/
