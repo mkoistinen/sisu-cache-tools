@@ -26,7 +26,15 @@ class PreCache(object):
         current_site = Site.objects.get_current()
 
         for name, sitemap_class in cls._get_sitemaps().iteritems():
-            sitemap = sitemap_class()
+            try:
+                sitemap = sitemap_class()
+            except TypeError:
+                #
+                # The sitemap "class" could already be an object. In fact,
+                # this is likely the case in i18n projects.
+                #
+                sitemap = sitemap_class
+
             for item in sitemap.items():
                 if hasattr(sitemap, 'location'):
                     url = sitemap.location(item)
